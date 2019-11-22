@@ -28,8 +28,8 @@ def translate_rna_to_protein(rna: str) -> str:
     protein = ""
     length = (len(rna) // 3) * 3
     for i in range(0, length, 3):
-        st = rna[i : i + 3]
-        protein += rna_to_protein_table[st]
+        codon = rna[i: i + 3]
+        protein += rna_to_protein_table[codon]
     return protein
 
 
@@ -57,9 +57,9 @@ def read_dna_fasta(file) -> dict:
 def read_rna_codon_table(file) -> dict:
     voc = {}
     for line in file.readlines():
-        arr_of_simbols = line.strip().split()
-        for ind in range(0, len(arr_of_simbols) - 1, 2):
-            voc[arr_of_simbols[ind]] = arr_of_simbols[ind + 1]
+        codon_symbol_list = line.strip().split()
+        for ind in range(0, len(codon_symbol_list) - 1, 2):
+            voc[codon_symbol_list[ind]] = codon_symbol_list[ind + 1]
     return voc
 
 
