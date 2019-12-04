@@ -19,8 +19,21 @@ print(custom_sum.__original_func)  # <function custom_sum at <some_id>>
 import functools
 
 
+def decorator(func):
+    def wrapper(function):
+        def inner(*args, **kwargs):
+            inner.__doc__ = func.__doc__
+            inner.__name__ = func.__name__
+            inner.__original_func = func
+            return function(*args, **kwargs)
+
+        return inner
+
+    return wrapper
+
+
 def print_result(func):
-    # Place for new decorator
+    @decorator(func)
     def wrapper(*args, **kwargs):
         """Function-wrapper which print result of an original function"""
         result = func(*args, **kwargs)
