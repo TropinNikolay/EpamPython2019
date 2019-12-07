@@ -38,6 +38,7 @@ PEP8 соблюдать строго, проверку делаю автотес
 давать логичные подходящие имена.
 """
 import datetime
+import time
 
 
 class Student:
@@ -70,7 +71,7 @@ class Homework:
         self.created = datetime.datetime.now()
 
     def is_active(self):
-        return self.created + self.deadline <= datetime.datetime.now()
+        return self.created + self.deadline >= datetime.datetime.now()
 
 
 if __name__ == '__main__':
@@ -89,5 +90,6 @@ if __name__ == '__main__':
     oop_homework = create_homework_too('create 2 simple classes', 5)
     oop_homework.deadline  # 5 days, 0:00:00
 
+    time.sleep(1)
     student.do_homework(oop_homework)
     student.do_homework(expired_homework)  # You are late
