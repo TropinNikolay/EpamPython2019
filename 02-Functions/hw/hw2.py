@@ -13,7 +13,7 @@ def atom(value=None):
     def process_value(*args):
         nonlocal variable
         for function in args:
-            variable = eval(function)
+            variable = function(variable)
         return variable
 
     def delete_value():
@@ -30,6 +30,6 @@ print(vget())
 vset(15)
 print(vget())
 vdel()
-vset(100)
+vset(-100)
 print(vget())
-print(veval("variable+1"))
+print(veval(abs, chr))
