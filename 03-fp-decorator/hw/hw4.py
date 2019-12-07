@@ -1,12 +1,11 @@
-def applydecorator(_):
-    def say_my_name(function):
-        def wrapper(*args, **kwargs):
-            print(function.__name__)
-            return function(*args, **kwargs)
+def applydecorator(function):
+    def wrapper(foo):
+        def inner(*args, **kwargs):
+            return function(foo, *args, **kwargs)
 
-        return wrapper
+        return inner
 
-    return say_my_name
+    return wrapper
 
 
 @applydecorator
