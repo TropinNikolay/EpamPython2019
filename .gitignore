@@ -279,3 +279,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.gitignore.io/api/osx,python,windows,pycharm+all,visualstudiocode
+
+venv_EpamPython
