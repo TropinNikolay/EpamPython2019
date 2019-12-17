@@ -13,11 +13,13 @@ def handle_client(client_socket):
     try:
         name = client_socket.recv(BUFSIZE).decode()
         clients[client_socket] = name
+        broadcast(name, client_socket, 'new')
         print("Data received:", name)
         while True:
             data = client_socket.recv(BUFSIZE).decode()
             if data == "q":
-                print("Client quits: ")
+                print("Client quits")
+                broadcast(data, client_socket, 'q')
                 client_socket.close()
                 del clients[client_socket]
                 break
@@ -32,23 +34,32 @@ def handle_client(client_socket):
                 message = data[index + 3:]
                 for address, client_name in clients.items():
                     if client_name == name:
+                        message = f'[{str(clients[client_socket])}] {message}'
                         address.send(message.encode())
             else:
-                broadcast(data.encode(), client_socket)
+                broadcast(data, client_socket)
 
     except OSError:
         client_socket.close()
         try:
             del clients[client_socket]
         except KeyError:
-            print("Client quits: ")
+            print("Client quits")
 
 
-def broadcast(data, client_socket):
+def broadcast(data, client_socket, flag=''):
     for client in clients:
         if client != client_socket:
             try:
-                client.send(data)
+                if flag == 'q':
+                    message = f'{str(clients[client_socket])} has left the chat'
+                    client.send(message.encode())
+                elif flag == 'new':
+                    message = f'{str(clients[client_socket])} has joined the chat!'
+                    client.send(message.encode())
+                else:
+                    message = f'[{str(clients[client_socket])}] {data}'
+                    client.send(message.encode())
             except OSError:
                 pass
 
