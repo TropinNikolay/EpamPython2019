@@ -30,12 +30,18 @@ def handle_client(client_socket):
                 client_socket.send(users.encode())
             elif data.find("-u") != -1:
                 index = data.find("-u")
-                name = data[: index - 1]
-                message = data[index + 3 :]
-                for address, client_name in clients.items():
-                    if client_name == name:
-                        message = f"[{str(clients[client_socket])}] {message}"
-                        address.send(message.encode())
+                if index == 0:
+                    for address, client_name in clients.items():
+                        if data[index + 3:].startswith(client_name):
+                            message = f"[{str(clients[client_socket])}] {data[index + 3 + len(client_name):]}"
+                            address.send(message.encode())
+                else:
+                    name = data[: index - 1]
+                    message = data[index + 3 :]
+                    for address, client_name in clients.items():
+                        if client_name == name:
+                            message = f"[{str(clients[client_socket])}] {message}"
+                            address.send(message.encode())
             else:
                 broadcast(data, client_socket)
 
