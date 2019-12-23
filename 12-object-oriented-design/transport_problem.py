@@ -1,27 +1,29 @@
 class Building:
-    def __init__(self):
+    def __init__(self, name, **kwargs):
         self.storage = []
+        self.name = name
 
 
 class Warehouse(Building):
-    def __init__(self, time_to_reach):
-        Building.__init__(self)
+    def __init__(self, *, name, time_to_reach, **kwargs):
+        super().__init__(name=name, **kwargs)
         self.time_to_reach = time_to_reach
 
     def check_delivery(self, number_of_containers):
         return len(self.storage) == number_of_containers
 
-    def receive_the_parcel(self, container):
+    def receive_the_parcel(self, name, container):
         self.storage.append(container)
-        print('Unloading')
+        print(f'{name} is unloading ...')
 
 
 class Transport:
-    def __init__(self):
+    def __init__(self, name):
         self.destination = None
         self.time_left = 0  # time left to a specific destination
         self.is_at_home = True
         self.payload = None
+        self.name = name
 
     def move(self, destination: Warehouse, payload):
         self.destination = destination
@@ -34,48 +36,49 @@ class Transport:
             return
         self.time_left -= 1
         if self.time_left == self.destination.time_to_reach:
-            self.destination.receive_the_parcel(self.payload)
+            self.destination.receive_the_parcel(self.name, self.payload)
         if self.time_left == 0:
             self.is_at_home = True
-            print('Again at home')
+            print(f'{self.name} again at home')
 
 
 class Factory(Building):
-    def __init__(self, containers, trucks: list, warehouses):
-        Building.__init__(self)
+    def __init__(self, *, name, containers, transport: list, warehouses, **kwargs):
+        super().__init__(name=name, **kwargs)
         self.storage = list(containers)
-        self.trucks = trucks
+        self.transport = transport
         self.warehouses = warehouses
 
     def delivery(self):
-        for truck in self.trucks:
-            if truck.is_at_home:
+        for transport in self.transport:
+            if transport.is_at_home:
                 if self.storage:
                     container = self.storage.pop(0)
-                    truck.move(self.warehouses[container], container)
-                    print(f'Moving {container}')
+                    transport.move(self.warehouses[container], container)
+                    print(f'{transport.name} departed from {self.name} with cargo {container}')
                 else:
-                    print('No containers')
+                    print(f'No cargo on {self.name}')
             else:
-                print('This transport is not available')
+                print(f'{transport.name} is not available on {self.name}')
 
 
 class Port(Factory, Warehouse):
-    def __init__(self, containers, trucks: list, warehouses, time_to_reach):
-        Factory.__init__(self, containers, trucks, warehouses)
-        Warehouse.__init__(self, time_to_reach)
+    def __init__(self, *, name, containers, transport: list, warehouses, time_to_reach):
+        super().__init__(name=name, containers=containers, transport=transport, warehouses=warehouses,
+                         time_to_reach=time_to_reach)
 
 
 if __name__ == '__main__':
     containers = input()
     assert len(containers) == containers.count('A') + containers.count('B'), 'Incorrect destination'
-    ship = Transport()
-    truck_1 = Transport()
-    truck_2 = Transport()
-    warehouse_A = Warehouse(4)
-    warehouse_B = Warehouse(5)
-    port = Port([], [ship], {'A': warehouse_A}, 1)
-    factory = Factory(containers, [truck_1, truck_2], {'A': port, 'B': warehouse_B})
+    ship = Transport('Princess yacht')
+    truck_1 = Transport('Ferrari')
+    truck_2 = Transport('Lamborghini')
+    warehouse_A = Warehouse(name='A', time_to_reach=4)
+    warehouse_B = Warehouse(name='B', time_to_reach=5)
+    port = Port(name='PORT', containers=[], transport=[ship], warehouses={'A': warehouse_A}, time_to_reach=1)
+    factory = Factory(name='FACTORY', containers=containers, transport=[truck_1, truck_2],
+                      warehouses={'A': port, 'B': warehouse_B})
     time = 1
     while True:
         print('======================================================')
