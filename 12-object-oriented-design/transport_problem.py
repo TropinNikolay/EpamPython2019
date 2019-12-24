@@ -63,9 +63,7 @@ class Factory(Building):
 
 
 class Port(Factory, Warehouse):
-    def __init__(self, *, name, containers, transport: list, warehouses, time_to_reach):
-        super().__init__(name=name, containers=containers, transport=transport, warehouses=warehouses,
-                         time_to_reach=time_to_reach)
+    pass
 
 
 if __name__ == '__main__':
