@@ -5,8 +5,8 @@ class Building:
 
 
 class Warehouse(Building):
-    def __init__(self, *, name, time_to_reach, **kwargs):
-        super().__init__(name=name, **kwargs)
+    def __init__(self, *, time_to_reach, **kwargs):
+        super().__init__(**kwargs)
         self.time_to_reach = time_to_reach
 
     def check_delivery(self, number_of_containers):
@@ -43,8 +43,8 @@ class Transport:
 
 
 class Factory(Building):
-    def __init__(self, *, name, containers, transport: list, warehouses, **kwargs):
-        super().__init__(name=name, **kwargs)
+    def __init__(self, *, containers, transport: list, warehouses, **kwargs):
+        super().__init__(**kwargs)
         self.storage = list(containers)
         self.transport = transport
         self.warehouses = warehouses
