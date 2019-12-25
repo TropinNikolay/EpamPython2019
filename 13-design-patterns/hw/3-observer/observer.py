@@ -33,12 +33,12 @@ dogs_life.subscribe(john)
 dogs_life.subscribe(erica)
 
 dogs_nutrition_videos = ['What do dogs eat?', 'Which Pedigree pack to choose?']
-dogs_nutrition_playlist = {'Dogs nutrition': dogs_nutrition_videos]
+dogs_nutrition_playlist = {'Dogs nutrition': dogs_nutrition_videos}
 
 for video in dogs_nutrition_videos:
     dogs_life.publish_video(video)
 
-dogs_life.publish_playlist(dogs_nutrition_playlist)
+dogs_life.publish_playlist('Dogs nutrition', dogs_nutrition_videos)
 
 Output:
 Dear John, there is new video on 'All about dogs' channel: 'What do dogs eat?'
@@ -49,3 +49,53 @@ Dear John, there is new playlist on 'All about dogs' channel: 'Dogs nutrition'
 Dear Erica, there is new playlist on 'All about dogs' channel: 'Dogs nutrition'
 
 """
+
+
+class MyTubeUser:
+    def __init__(self, user_name: str):
+        self._name = user_name
+
+    def update(self, message: str):
+        print(f'Dear {self._name}{message}')
+
+
+class MyTubeChannel:
+    def __init__(self, channel_name: str, chanel_owner: MyTubeUser):
+        self.name = channel_name
+        self.owner = chanel_owner
+        self.video = []
+        self.playlists = {}
+        self.observers = []
+
+    def subscribe(self, user: MyTubeUser):
+        self.observers.append(user)
+
+    def publish_video(self, video: str):
+        self.video.append(video)
+        message = f", there is new video on '{self.name}' channel: '{video}'"
+        for observer in self.observers:
+            observer.update(message)
+
+    def publish_playlist(self, name: str, playlist):
+        self.playlists[name] = playlist
+        message = f", there is new playlist on '{self.name}' channel: '{name}'"
+        for observer in self.observers:
+            observer.update(message)
+
+
+if __name__ == '__main__':
+    matt = MyTubeUser('Matt')
+    john = MyTubeUser('John')
+    erica = MyTubeUser('Erica')
+
+    dogs_life = MyTubeChannel('All about dogs', matt)
+    dogs_life.subscribe(john)
+    dogs_life.subscribe(erica)
+
+    dogs_nutrition_videos = ['What do dogs eat?', 'Which Pedigree pack to choose?']
+    dogs_nutrition_playlist = {'Dogs nutrition': dogs_nutrition_videos}
+
+    for video in dogs_nutrition_videos:
+        dogs_life.publish_video(video)
+
+    dogs_life.publish_playlist('Dogs nutrition', dogs_nutrition_videos)
