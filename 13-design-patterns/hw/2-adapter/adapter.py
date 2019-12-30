@@ -103,7 +103,7 @@ class DocumentsHandler:
 
 class Adapter(DocumentsHandler):
     def __init__(self, adaptee):
-        self.adaptee = adaptee
+        super().__init__(adaptee)
 
     @staticmethod
     def convert_to_extension(documents, extension):
@@ -123,10 +123,10 @@ class Adapter(DocumentsHandler):
 
     def upload_documents(self, documents):
         special_data = self.convert_to_extension(documents, 'json')
-        return self.adaptee.upload_documents(special_data)
+        return self._service.upload_documents(special_data)
 
     def get_documents(self, document_ids):
-        loaded_documents = self.adaptee.get_documents(document_ids)
+        loaded_documents = self._service.get_documents(document_ids)
         return self.convert_to_extension(loaded_documents, 'xml')
 
 
