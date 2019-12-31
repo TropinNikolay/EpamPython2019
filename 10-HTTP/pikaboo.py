@@ -7,22 +7,24 @@ headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36"
 }
 
+my_cookies = {
+    "name": "pkbRem",
+    "value": "%7B%22uid%22%3A3019715%2C%22username%22%3A%22PapaGuss%22%2C%22rem%22%3A%2212ffc280f4b7776a5e69cc5ccfa45335%22%2C%22tries%22%3A0%7D",
+}
+
+base_url = "https://pikabu.ru/new/subs?page="
+
 
 def pikaboo_parse(headers):
     session = requests.Session()
-    session.cookies.set(
-        name="pkbRem",
-        value="%7B%22uid%22%3A3019715%2C%22username%22%3A%22PapaGuss%22%2C%22rem%22%3A%2212ffc280f4b7776a5e69cc5ccfa45335%22%2C%22tries%22%3A0%7D",
-    )
+    session.cookies.set(**my_cookies)
 
     all_tags = []
     number_of_stories = 0
     iteration = 0
     while number_of_stories != 100:
         iteration += 1
-        response = session.get(
-            f"https://pikabu.ru/new/subs?page={iteration}", headers=headers
-        )
+        response = session.get(base_url + str(iteration), headers=headers)
         page = BeautifulSoup(response.content, "html.parser")
         stories = page.find("div", attrs="stories-feed__container").find_all("article")
         stories.pop()  # delete advertisement post
