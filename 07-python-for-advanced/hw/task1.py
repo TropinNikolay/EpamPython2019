@@ -66,28 +66,3 @@ class Meta(type):
 class SiamObj(metaclass=Meta):
     def __init__(self, *args, **kwargs):
         pass
-
-
-class A(metaclass=Meta):
-    def __init__(self, *args, **kwargs):
-        pass
-
-
-class B(metaclass=Meta):
-    def __init__(self, *args, **kwargs):
-        pass
-
-
-unit1 = SiamObj("1", "2", a=1)
-unit2 = SiamObj("1", "2", a=1)
-print(unit1 is unit2)
-
-unit3 = SiamObj("2", "2", a=1)
-unit3.connect("1", "2", 1).a = 2
-print(unit2.a == 2)
-
-pool = unit3.pool
-print(len(pool))
-
-del unit3
-print(len(pool))

@@ -17,8 +17,8 @@ def timer_property(t):
             self.fset = fset
             self.fdel = fdel
             self.__doc__ = doc
-            self.now = None
-            self.previous = None
+            self.set_time = None
+            self.value = None
 
         def __get__(self, obj, objtype=None):
             """ Return an attribute of instance, which is of type owner. """
@@ -27,16 +27,16 @@ def timer_property(t):
             if self.fget is None:
                 raise AttributeError("can't read attr")
 
-            if not self.now or time.time() - self.now > t:
-                self.previous = self.fget(obj)
-                self.now = time.time()
-            return self.previous
+            if not self.set_time or time.time() - self.set_time > t:
+                self.value = self.fget(obj)
+                self.set_time = time.time()
+            return self.value
 
         def __set__(self, obj, value):
             """ Set an attribute of instance to value. """
             if self.fset is None:
                 raise AttributeError("can't set attr")
-            self.fset(obj, value)
+            self.value = value
 
         def __delete__(self, obj):
             """ Delete an attribute of instance. """
@@ -60,7 +60,6 @@ def timer_property(t):
 
 
 class Message:
-
     @timer_property(t=1)
     def msg(self):
         self._msg = self.get_message()
@@ -77,7 +76,7 @@ class Message:
         return uuid.uuid4().hex
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     m = Message()
     initial = m.msg
     assert initial is m.msg
