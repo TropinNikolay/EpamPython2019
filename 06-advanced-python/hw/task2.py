@@ -67,10 +67,11 @@ class Quaternion:
         return f'Quaternion({self.s}, {self.x}, {self.y}, {self.z})'
 
     def reciprocal(self):
-        s = self.conjugate().s / (self.norm ** 2)
-        x = self.conjugate().x / (self.norm ** 2)
-        y = self.conjugate().y / (self.norm ** 2)
-        z = self.conjugate().z / (self.norm ** 2)
+        conjugate_quaternion = self.conjugate()
+        s = conjugate_quaternion.s / (self.norm ** 2)
+        x = conjugate_quaternion.x / (self.norm ** 2)
+        y = conjugate_quaternion.y / (self.norm ** 2)
+        z = conjugate_quaternion.z / (self.norm ** 2)
         return Quaternion(s, x, y, z)
 
     def conjugate(self):
