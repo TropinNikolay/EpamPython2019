@@ -7,40 +7,59 @@ E - dict(<V> : [<V>, <V>, ...])
 
 
 class Graph:
-    def __init__(self, E):
-        self.E = E
-        self.visited = list()
-        self.length = len(self.E)
+    def __init__(self, graph):
+        self.graph = graph
+        self.visited = []
+        self.length = len(self.graph)
         self.counter = 0
 
     def bfs(self):
-        start = list(self.E.keys())[0]
+        i = 0
+        start = list(self.graph)[i]
         queue = [start]
         while queue:
             vertex = queue.pop(0)
+
             if vertex not in self.visited:
                 self.visited.append(vertex)
-                tmp = []
-                for ver in self.E[vertex]:
-                    if ver not in self.visited:
-                        tmp.append(ver)
-                queue.extend(tmp)
+
+            for ver in self.graph[vertex]:
+                if ver not in self.visited:
+                    queue.append(ver)
+
+            if len(self.visited) != len(self.graph) and not queue:
+                queue.append(list(self.graph)[i + 1])
+
         return self.visited
 
     def __next__(self):
         if self.counter < self.length:
             self.counter += 1
-            self.bfs()
             return self.visited[self.counter - 1]
         else:
+            self.visited = []
             raise StopIteration
 
     def __iter__(self):
+        self.bfs()
         return self
 
 
-E = {'A': ['B', 'C', 'D'], 'B': ['C'], 'C': [], 'D': ['A']}
-graph = Graph(E)
+E = {"A": ["B", "C", "D"], "B": ["C"], "C": [], "D": ["A"]}
+A = {"B": ["C"], "A": ["B", "C", "D"], "C": [], "D": ["A"]}
+C = {
+    "A": ["B", "C", "D"],
+    "C": ["E"],
+    "B": ["G", "F"],
+    "G": [],
+    "F": [],
+    "E": [],
+    "D": [],
+}
+
+# graph = Graph(E)
+graph = Graph(A)
+# graph = Graph(C)
 
 for vertex in graph:
     print(vertex)
