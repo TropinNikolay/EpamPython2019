@@ -24,38 +24,26 @@ class Quaternion:
         self.norm = (self.s * self.s + self.x * self.x + self.y * self.y + self.z * self.z) ** (1 / 2)
 
     def __add__(self, other):
-        return Quaternion(self.s + other.s, self.x + other.x, self.y + other.y, self.z + other.z)
+        return type(self)(self.s + other.s, self.x + other.x, self.y + other.y, self.z + other.z)
 
     def __sub__(self, other):
-        return Quaternion(self.s - other.s, self.x - other.x, self.y - other.y, self.z - other.z)
+        return type(self)(self.s - other.s, self.x - other.x, self.y - other.y, self.z - other.z)
 
     def __mul__(self, other):
         s = self.s * other.s - self.x * other.x - self.y * other.y - self.z * other.z
         x = self.s * other.x + other.s * self.x + self.y * other.z - other.y * self.z
         y = self.s * other.y + other.s * self.y + self.z * other.x - other.z * self.x
         z = self.s * other.z + other.s * self.z + self.x * other.y - other.x * self.y
-        return Quaternion(s, x, y, z)
+        return type(self)(s, x, y, z)
 
     def __truediv__(self, other):
         return self * other.reciprocal()
 
-    def __lt__(self, other):
-        return self.norm < other.norm
-
-    def __le__(self, other):
-        return self.norm <= other.norm
-
     def __eq__(self, other):
-        return self.norm == other.norm
-
-    def __ne__(self, other):
-        return self.norm != other.norm
-
-    def __gt__(self, other):
-        return self.norm > other.norm
-
-    def __ge__(self, other):
-        return self.norm >= other.norm
+        return (self.s == other.s and
+                self.x == other.x and
+                self.y == other.y and
+                self.z == other.z)
 
     def __abs__(self):
         return self.norm
@@ -72,10 +60,10 @@ class Quaternion:
         x = conjugate_quaternion.x / (self.norm ** 2)
         y = conjugate_quaternion.y / (self.norm ** 2)
         z = conjugate_quaternion.z / (self.norm ** 2)
-        return Quaternion(s, x, y, z)
+        return type(self)(s, x, y, z)
 
     def conjugate(self):
-        return Quaternion(self.s, -self.x, -self.y, -self.z)
+        return type(self)(self.s, -self.x, -self.y, -self.z)
 
 
 if __name__ == "__main__":
