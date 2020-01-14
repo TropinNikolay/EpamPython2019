@@ -12,6 +12,7 @@ class Graph:
         self.visited = []
         self.length = len(self.graph)
         self.counter = 0
+        self.bfs()
 
     def bfs(self):
         i = 0
@@ -37,10 +38,12 @@ class Graph:
             self.counter += 1
             return self.visited[self.counter - 1]
         else:
+            self.counter = 0
             self.visited = []
             raise StopIteration
 
     def __iter__(self):
+        self.counter = 0
         self.bfs()
         return self
 
@@ -57,9 +60,18 @@ C = {
     "D": [],
 }
 
-# graph = Graph(E)
-graph = Graph(A)
+graph = Graph(E)
+# graph = Graph(A)
 # graph = Graph(C)
 
+print(next(graph))
+print(next(graph))
+print(next(graph))
+print(next(graph))
+
+print("First loop")
 for vertex in graph:
     print(vertex)
+
+for vertex in graph:
+    print("Second loop", vertex)
